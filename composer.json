@@ -1,0 +1,17 @@
+{
+    "name": "fatalus/php-shell",
+    "description": "Run the shell easier directly from php without the need of exec()",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "fatalus\\PhpShell\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "https://github.com/fatalus69"
+        }
+    ],
+    "require": {}
+}
