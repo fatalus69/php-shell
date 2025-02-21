@@ -5,8 +5,9 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "fatalus\\PhpShell\\": "src/"
+            "fatalus\\PhpShell\\": "src/commands"
         }
+        
     },
     "authors": [
         {

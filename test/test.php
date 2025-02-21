@@ -6,9 +6,7 @@ use fatalus\PhpShell\Shell;
 
 $shell = new Shell();
 
-echo $shell->which('php');
+echo $shell->tar('test.php', 'test.tar', EXTRACT, GZIP,  CREATE, VERBOSE);
 
-echo Shell::which('php');
-
-// echo(Shell::which('mysqldump'));
-// echo(Shell::which('php'));
+echo(Shell::which('mysqldump'));
+echo(Shell::which('php'));

@@ -2,6 +2,8 @@
 
 namespace fatalus\PhpShell;
 
+require_once __DIR__.'/../configuration/constants.php';
+
 class Shell
 {
     public function __call($method, $arguments)
@@ -9,11 +11,9 @@ class Shell
         return self::__callStatic($method, $arguments);
     }
 
-    public static function __callStatic($method, $arguments) 
+    public static function __callStatic($method, mixed $arguments) 
     {
-        $categories = self::getClasses();
-
-        foreach ($categories as $class) {
+        foreach (self::getClasses() as $class) {
             if (method_exists($class, $method)) {
                 return call_user_func_array([$class, $method], $arguments);
             }
@@ -22,7 +22,7 @@ class Shell
         throw new \BadMethodCallException("Method {$method} does not exist.");
     }
 
-    public static function getClasses(): array
+    private static function getClasses(): array
     {
         $class_names = [];
 
