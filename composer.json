@@ -1,18 +1,20 @@
 {
     "name": "fatalus/php-shell",
-    "description": "Run the shell easier directly from php without the need of exec()",
+    "description": "Run the shell Commands directly from PHP",
+    "homepage": "https://github.com/fatalus69/php-shell",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "fatalus\\PhpShell\\": "src/commands"
-        }
-        
+        }   
     },
     "authors": [
         {
             "name": "https://github.com/fatalus69"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^8.1"
+    }
 }

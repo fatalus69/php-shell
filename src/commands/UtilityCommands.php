@@ -16,12 +16,6 @@ class UtilityCommands
         $output = exec("which ".escapeshellarg($command));
         return (!empty($output)) ? $output : false;
     }
-
-    public static function test(mixed ...$vars) {
-        var_dump($vars);
-        die;
-    }
-
     
     public static function tar(string $source, string $destination = '', ...$options): string|false
     {
@@ -31,7 +25,7 @@ class UtilityCommands
         if ($flags_int & EXTRACT) { //only allow extraction when source is actually a tar file
             $source_extension = explode('.', $source)[1];
             if( $source_extension !== 'tar') {
-                throw new WrongFileException('tar', $source_extension); //todo: create custom exception
+                throw new WrongFileException('tar', $source_extension);
             }
 
             if ($destination === '') {
@@ -44,21 +38,16 @@ class UtilityCommands
 
         if ($flags_int & CREATE) {
             if ($destination === '') {
-                $destination = $source.'.tar';
-                if ($flags_int & GZIP) {
-                    $destination .= '.gz';
-                }
+                $destination = $source . '.tar' . (($flags_int & GZIP) ? '.gz' : '');
             }
-
             $flags .= 'c';
-        } 
+        }
 
-        if ($flags_int & CREATE) $flags .= 'c'; //todo: only allow when $destination or none is a tar file
-        
+        if ($flags_int & CREATE) $flags .= 'c';        
         if ($flags_int & FILE) $flags .= 'T'; 
         if ($flags_int & GZIP) $flags .= 'z';
         if ($flags_int & BZIP2) $flags .= 'j';
-        if ($flags_int & VERBOSE) $flags .= 'v'; //actually pretty useless in here cause we don't want massive output, but I'll keep it for now
+        if ($flags_int & VERBOSE) $flags .= 'v'; //actually pretty useless in here cause we don't want massive output
 
         $flags .= 'f';
 
