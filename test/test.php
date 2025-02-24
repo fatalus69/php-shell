@@ -9,7 +9,8 @@ use fatalus\PhpShell\Shell;
 // die;
 $shell = new Shell();
 
-echo $shell->tar('test.php', 'test.tar', EXTRACT, GZIP,  CREATE, VERBOSE);
+// echo $shell->tar('test.php', 'test.tar', EXTRACT, GZIP,  CREATE, VERBOSE);
 
 echo($shell->which('php'));
+
 // echo(Shell::which('php'));

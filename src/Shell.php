@@ -6,27 +6,49 @@ require_once __DIR__.'/configuration/constants.php';
 
 use fatalus\PhpShell\Commands\UtilityCommands;
 
+/**
+ * @method static string whoami() Calls whoami() from UtilityCommands
+ * @method static string which(string $command) Calls UtilityCommands::which() from UtilityCommands
+ * @method string whoami() Calls whoami() from UtilityCommands
+ * @method string which(string $command) Calls which() from UtilityCommands
+ */
+
 final class Shell {
     
-    private UtilityCommands $utility;
+    private static array $commands = [];
+    private array $instanceCommands = [];
 
     public function __construct()
     {
-        $this->utility = new UtilityCommands();
+        self::initializeCommands(); 
+        $this->instanceCommands = self::$commands;
     }
 
-    public function whoami(): string
+    private static function initializeCommands()
     {
-        return $this->utility->whoami();
+        if (empty(self::$commands)) {
+            self::$commands['utility'] = new UtilityCommands();
+        }
     }
 
-    public function which(string $command): string|false
+    public function __call($name, $arguments)
     {
-        return $this->utility->which($command);
+        foreach ($this->instanceCommands as $command) {
+            if (method_exists($command, $name)) {
+                return $command->$name(...$arguments);
+            }
+        }
+        throw new \BadMethodCallException("Method '$name' not found in any command classes.");
     }
 
-    public function tar(string $source, string $destination = '', ...$options): string|false
+    public static function __callStatic($name, $arguments)
     {
-        return $this->utility->tar($source, $destination, ...$options);
+        self::initializeCommands();
+        foreach (self::$commands as $command) {
+            if (method_exists($command, $name)) {
+                return $command->$name(...$arguments);
+            }
+        }
+        throw new \BadMethodCallException("Static method '$name' not found in any command classes.");
     }
 }

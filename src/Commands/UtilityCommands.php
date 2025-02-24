@@ -3,26 +3,22 @@
 namespace fatalus\PhpShell\Commands;
 
 use fatalus\PhpShell\Exceptions\WrongFileException;
+use Exception;
 
 class UtilityCommands
 {
-    public function __contstruct() {
-        
-        
-    }
-
-    public static function whoami(): string
+    public function whoami(): string
     {
         return exec('whoami');
     }
 
-    public static function which(string $command): string|false
+    public function which(string $command): string|false
     {
         $output = exec("which ".escapeshellarg($command));
         return (!empty($output)) ? $output : false;
     }
     
-    public static function tar(string $source, string $destination = '', ...$options): string|false
+    public function tar(string $source, string $destination = '', ...$options): bool
     {
         $flags = '';
         $flags_int = array_reduce($options, fn($carry, $item) => $carry | $item, 0);
@@ -56,6 +52,65 @@ class UtilityCommands
 
         $flags .= 'f';
 
-        return exec("tar -{$flags} ".escapeshellarg($source)." ".escapeshellarg($destination));
+        $output = null;
+        $return_var = 0;
+
+        exec("tar -{$flags} ".escapeshellarg($source)." ".escapeshellarg($destination), $output, $return_var);
+
+        if ($return_var !== 0) {
+            throw new Exception("Error compressing file: " . implode("\n", $output));
+        }
+
+        return true;
+    }
+
+
+    public function gzip(string $source, string $destination = '', ...$options): bool
+    {
+        $flags = '';
+        $flags_int = array_reduce($options, fn($carry, $item) => $carry | $item, 0);
+
+        if ($flags_int & KEEP) $flags .= 'k';
+        if ($flags_int & DECOMPRESS) $flags .= 'd';
+        if ($flags_int & DIRECTORY) $flags .= 'r';
+        if ($flags_int & CHECK_FILE) $flags .= 't';
+
+        if ($flags_int & QUICK && $flags_int & SAFE) {
+            throw new Exception('Cannot use both QUICK and SAFE flags at the same time');
+        } 
+
+        if ($flags_int & QUICK) $flags .= '1';
+        if ($flags_int & SAFE) $flags .= '9';
+
+        if (!($flags_int & QUICK) && !($flags_int & SAFE)) {
+            $flags .= '5';
+        }
+
+        if ($destination === '') {
+            $destination = $source . '.gz';
+        }
+
+        $output = null;
+        $return_var = 0;
+
+        exec("gzip -{$flags} ".escapeshellarg($source)." > ".escapeshellarg($destination), $output, $return_var);
+
+        if ($return_var !== 0) {
+            throw new Exception("Error compressing file: " . implode("\n", $output));
+        }
+
+        return true;
+    }
+
+
+
+
+
+
+    public function zip(string $source, string $destination = '', ...$options): string|false
+    {
+
+
+        return true;
     }
 }
