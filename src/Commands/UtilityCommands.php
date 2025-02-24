@@ -1,11 +1,16 @@
 <?php 
 
-namespace fatalus\PhpShell;
+namespace fatalus\PhpShell\Commands;
 
 use fatalus\PhpShell\Exceptions\WrongFileException;
 
 class UtilityCommands
 {
+    public function __contstruct() {
+        
+        
+    }
+
     public static function whoami(): string
     {
         return exec('whoami');

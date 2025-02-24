@@ -1,5 +1,7 @@
 <?php
 
+namespace fatalus\PhpShell\Configuration;
+
 // TAR constants
 define('EXTRACT', 1);
 define('GZIP', 2);
