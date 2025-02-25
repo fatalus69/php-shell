@@ -7,10 +7,14 @@ require_once __DIR__.'/configuration/constants.php';
 use fatalus\PhpShell\Commands\UtilityCommands;
 
 /**
- * @method static string whoami() Calls whoami() from UtilityCommands
- * @method static string which(string $command) Calls UtilityCommands::which() from UtilityCommands
  * @method string whoami() Calls whoami() from UtilityCommands
  * @method string which(string $command) Calls which() from UtilityCommands
+ * @method bool tar(string $source, string $destination = '', ...$options) Calls tar() from UtilityCommands
+ * @method bool gzip(string $source, string $destination = '', ...$options) Calls gzip() from UtilityCommands 
+ * @method bool gunzip(string $source, string $destination = '', ...$options) Calls gunzip() from UtilityCommands
+ * @method bool zip(string $source, string $destination = '', ...$options) Calls zip() from UtilityCommands
+ * @method bool unzip(string $source, string $destination = '', ...$options) Calls unzip() from UtilityCommands
+ * 
  */
 
 final class Shell {

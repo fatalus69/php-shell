@@ -11,6 +11,6 @@ $shell = new Shell();
 
 // echo $shell->tar('test.php', 'test.tar', EXTRACT, GZIP,  CREATE, VERBOSE);
 
-echo($shell->which('php'));
+echo($shell->tar(__DIR__ . '/../test_zip', 'fuck_you_tar.tar.gz', GZIP, CREATE));
 
 // echo(Shell::which('php'));
