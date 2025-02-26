@@ -25,7 +25,7 @@ class UtilityCommands
         
         if ($flags_int & EXTRACT) { //only allow extraction when source is actually a tar file
             $source_extension = explode('.', $source)[1];
-            if( $source_extension !== 'tar') {
+            if ($source_extension !== 'tar') {
                 throw new WrongFileException('tar', $source_extension);
             }
 
@@ -44,18 +44,18 @@ class UtilityCommands
             $flags .= 'c';
         }
 
-        if ($flags_int & CREATE) $flags .= 'c';        
         if ($flags_int & FILE) $flags .= 'T'; 
         if ($flags_int & GZIP) $flags .= 'z';
         if ($flags_int & BZIP2) $flags .= 'j';
-        if ($flags_int & VERBOSE) $flags .= 'v'; //actually pretty useless in here cause we don't want massive output
+
+        if ($flags_int & TAR_DECOMPRESS) $flags = 'xvZ';
 
         $flags .= 'f';
 
         $output = null;
         $return_var = 0;
 
-        exec("tar -{$flags} ".escapeshellarg($source)." ".escapeshellarg($destination), $output, $return_var);
+        exec("tar -{$flags} ".escapeshellarg($destination)." ".escapeshellarg($source), $output, $return_var);
 
         if ($return_var !== 0) {
             throw new Exception("Error compressing file: " . implode("\n", $output));
@@ -71,13 +71,23 @@ class UtilityCommands
         $flags_int = array_reduce($options, fn($carry, $item) => $carry | $item, 0);
 
         if ($flags_int & KEEP) $flags .= 'k';
-        if ($flags_int & DECOMPRESS) $flags .= 'd';
         if ($flags_int & DIRECTORY) $flags .= 'r';
         if ($flags_int & CHECK_GZIP) $flags .= 't';
 
         if ($flags_int & QUICK && $flags_int & SAFE) {
             throw new Exception('Cannot use both QUICK and SAFE flags at the same time');
-        } 
+        }
+        
+        if ($flags_int & DECOMPRESS) {
+            $flags .= 'd';
+            
+            $destination_dir = dirname($destination);
+            if (!is_dir(__DIR__.$destination_dir)) {
+                mkdir(__DIR__.$destination_dir, 0755, true);
+            }
+
+            $destination = $destination_dir;
+        }
 
         $this->checkCompressionSpeed($flags_int, $flags);
 
@@ -95,12 +105,16 @@ class UtilityCommands
 
     public function gunzip(string $source): bool 
     {
-        $source_extension = end(explode('.', $source));
+        var_dump($source);
+
+        $exploded_source = explode('.', $source);
+        $source_extension = $exploded_source[count($exploded_source) - 1];
+
         if( $source_extension !== 'gz') {
             throw new WrongFileException('gz', $source_extension);
         }
 
-        $destination = reset(explode('.', $source));      
+        $destination = explode('.', $source)[0];
         
         return $this->gzip($source, $destination, DECOMPRESS);
     }

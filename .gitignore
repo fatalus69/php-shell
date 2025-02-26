@@ -3,3 +3,5 @@ vendor/
 .vscode
 test_zip/
 *.gz
+*.tar
+*.zip
