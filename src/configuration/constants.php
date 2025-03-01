@@ -4,6 +4,8 @@ namespace fatalus\PhpShell\Configuration;
 
 //TODO: better way so only the tar constants can be used in tar and NOT in zip or gzip!
 
+define('LIB_ROOT', __DIR__.'/../..');
+
 /** TAR constants */
 define('EXTRACT', 1); //-x
 define('GZIP', 2); //-z
@@ -11,7 +13,6 @@ define('CREATE', 4); //-c
 define('BZIP2', 8); //-j
 define('VERBOSE', 16); //-v
 define('FILE', 32); //-T
-define('TAR_DECOMPRESS', 64); //-d
 
 /** GZIP constants */
 define('KEEP', 1); //-k
