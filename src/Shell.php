@@ -5,6 +5,7 @@ namespace fatalus\PhpShell;
 require_once __DIR__.'/configuration/constants.php';
 
 use fatalus\PhpShell\Commands\UtilityCommands;
+use fatalus\PhpShell\Commands\DatabaseCommands;
 
 /**
  * @method string whoami() Calls whoami() from UtilityCommands
@@ -32,6 +33,7 @@ final class Shell {
     {
         if (empty(self::$commands)) {
             self::$commands['utility'] = new UtilityCommands();
+            self::$commands['database'] = new DatabaseCommands();
         }
     }
 
