@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use fatalus\PhpShell\Shell;
+use fatalus\PhpShell\Commands\UtilityCommands;
 
 $shell = new Shell();
 

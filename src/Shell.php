@@ -4,57 +4,40 @@ namespace fatalus\PhpShell;
 
 require_once __DIR__.'/configuration/constants.php';
 
-use fatalus\PhpShell\Commands\UtilityCommands;
-use fatalus\PhpShell\Commands\DatabaseCommands;
+class Shell
+{
+    public function __call($method, $arguments)
+    {
+        return self::__callStatic($method, $arguments);
+    }
 
-/**
- * @method string whoami() Calls whoami() from UtilityCommands
- * @method string which(string $command) Calls which() from UtilityCommands
- * @method bool tar(string $source, string $destination = '', ...$options) Calls tar() from UtilityCommands
- * @method bool gzip(string $source, string $destination = '', ...$options) Calls gzip() from UtilityCommands 
- * @method bool gunzip(string $source, string $destination = '', ...$options) Calls gunzip() from UtilityCommands
- * @method bool zip(string $source, string $destination = '', ...$options) Calls zip() from UtilityCommands
- * @method bool unzip(string $source, string $destination = '', ...$options) Calls unzip() from UtilityCommands
- * 
- */
-
-final class Shell {
+    public static function __callStatic($method, mixed $arguments) 
+    {
+        foreach (self::getClasses() as $class) {
+            if (method_exists($class, $method)) {
+                // If the last argument is an array of options, merge them using bitwise OR
+                if (!empty($arguments) && is_array(end($arguments))) {
+                    $arguments[key($arguments)] = array_reduce(array_pop($arguments), fn($carry, $item) => $carry | $item, 0);
+                }
     
-    private static array $commands = [];
-    private array $instanceCommands = [];
-
-    public function __construct()
-    {
-        self::initializeCommands(); 
-        $this->instanceCommands = self::$commands;
-    }
-
-    private static function initializeCommands()
-    {
-        if (empty(self::$commands)) {
-            self::$commands['utility'] = new UtilityCommands();
-            self::$commands['database'] = new DatabaseCommands();
-        }
-    }
-
-    public function __call($name, $arguments)
-    {
-        foreach ($this->instanceCommands as $command) {
-            if (method_exists($command, $name)) {
-                return $command->$name(...$arguments);
+                return call_user_func_array([$class, $method], $arguments);
             }
         }
-        throw new \BadMethodCallException("Method '$name' not found in any command classes.");
+    
+
+        throw new \BadMethodCallException("Method {$method} does not exist.");
     }
 
-    public static function __callStatic($name, $arguments)
+    private static function getClasses(): array
     {
-        self::initializeCommands();
-        foreach (self::$commands as $command) {
-            if (method_exists($command, $name)) {
-                return $command->$name(...$arguments);
+        $class_names = [];
+
+        foreach(new \DirectoryIterator(__DIR__.DIRECTORY_SEPARATOR."Commands") as $file) {
+            if ($file->isFile() && $file->getExtension() === 'php' && $file->getBasename() !== 'Shell.php') {
+                $class_names[] = "fatalus\\PhpShell\\Commands\\".$file->getBasename('.php');
             }
         }
-        throw new \BadMethodCallException("Static method '$name' not found in any command classes.");
+
+        return $class_names;
     }
 }

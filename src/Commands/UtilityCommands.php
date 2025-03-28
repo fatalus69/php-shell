@@ -6,23 +6,32 @@ use fatalus\PhpShell\Exceptions\WrongFileException;
 use Exception;
 
 class UtilityCommands
-{
-    public function whoami(): string
+{   
+    public static function stat(string $filepath): array
     {
-        return exec('whoami');
+        if (!file_exists($filepath)) {
+            throw new Exception("File not found: $filepath");
+        }
+
+        $output = [
+            'size' => filesize($filepath),
+            'type' => filetype($filepath),
+            'permissions' => substr(sprintf('%o', fileperms($filepath)), -4),
+            'owner' => fileowner($filepath),
+            'group' => filegroup($filepath),
+            'access' => date('Y-m-d H:i:s', fileatime($filepath)),
+            'modified' => date('Y-m-d H:i:s', filemtime($filepath)),
+            'birth' => date('Y-m-d H:i:s', filectime($filepath)),
+        ];
+
+        return $output;
     }
 
-    public function which(string $command): string|bool
-    {
-        $output = exec("which ".escapeshellarg($command));
-        return (!empty($output)) ? $output : false;
-    }
-    
-    public function tar(string $source, string $destination = '', ...$options): bool //error
+    public static function tar(string $source, string $destination = '', ...$options): bool //error
     {
         $flags = '';
         $flags_int = array_reduce($options, fn($carry, $item) => $carry | $item, 0);
-        
+
         if ($flags_int & EXTRACT) { //only allow extraction when source is actually a tar file
             if (!preg_match('/\.tar(\.gz|\.bz2|\.xz)?$/', $source)) {
                 throw new WrongFileException('tar', pathinfo($source, PATHINFO_EXTENSION));
@@ -69,16 +78,16 @@ class UtilityCommands
     }
 
 
-    public function gzip(string $source, string $destination = '', ...$options): bool
+    public static function gzip(string $source, string $destination = '', ...$options): bool
     {
         $flags = '';
         $flags_int = array_reduce($options, fn($carry, $item) => $carry | $item, 0);
-
+        
         if ($flags_int & KEEP) $flags .= 'k';
         if ($flags_int & DIRECTORY) $flags .= 'r';
         if ($flags_int & CHECK_GZIP) $flags .= 't';
 
-        $this->checkCompressionSpeed($flags_int, $flags);
+        self::checkCompressionSpeed($flags_int, $flags);
 
         if ($flags_int & DECOMPRESS) $flags = 'd';
 
@@ -94,7 +103,7 @@ class UtilityCommands
         return true;
     }
 
-    public function gunzip(string $source): bool 
+    public static function gunzip(string $source): bool 
     {
         $exploded_source = explode('.', $source);
         $source_extension = $exploded_source[count($exploded_source) - 1];
@@ -108,7 +117,7 @@ class UtilityCommands
         return false;
     }
 
-    public function zip(string $source, string $destination = '', ...$options): bool
+    public static function zip(string $source, string $destination = '', ...$options): bool
     {
         $flags = '';
         $flags_int = array_reduce($options, fn($carry, $item) => $carry | $item, 0);
@@ -122,7 +131,7 @@ class UtilityCommands
             $destination = $source . '.gz';
         }
 
-        $this->checkCompressionSpeed($flags_int, $flags);
+        self::checkCompressionSpeed($flags_int, $flags);
         $flags .= 'q';
 
         $output = null;
@@ -137,7 +146,7 @@ class UtilityCommands
         return true;
     }
 
-    public function unzip(string $source, ...$options): bool
+    public static function unzip(string $source, ...$options): bool
     {
         $flags = '';
         $flags_int = array_reduce($options, fn($carry, $item) => $carry | $item, 0);

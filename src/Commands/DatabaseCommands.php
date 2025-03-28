@@ -2,21 +2,21 @@
 
 namespace fatalus\PhpShell\Commands;
 
-use fatalus\PhpShell\Commands\UtilityCommands;
+use fatalus\PhpShell\Commands\SystemCommands;
 use Exception;
 
 class DatabaseCommands {
 
-    private UtilityCommands $utility;
+    private SystemCommands $system;
 
     public function __construct() {
-        $this->utility = new UtilityCommands();
+        $this->system = new SystemCommands();
     }
     
-    public function mysqldump() {
-        $executable = $this->utility->which('mysqldump');
+    public static function mysqldump() {
+        $executable = self::$system->which('mysqldump');
 
-        if ($executable === null) {
+        if ($executable === false) {
             throw new Exception('mysqldump not found');
         }
 
@@ -48,11 +48,15 @@ class DatabaseCommands {
             throw new Exception('mysqldump failed');
         }
 
-
+        return $output;
     }
 
-    public function pg_dump() {
-        $executable = $this->utility->which('pg_dump');
+    public static function pg_dump() {
+        $executable = self::$system->which('pg_dump');
+
+        if ($executable === false) {
+            throw new Exception('pg_dump not found');
+        }
 
         throw new Exception('Not Implemented');
     }

@@ -37,14 +37,19 @@ UtilityCommands::whoami();
 
 | Call                                    | Description                                                             | Return Type   |
 | :-------------------------------------- | :---------------------------------------------------------------------- | :-----------: |
-| **Utility Commands**                    |                                                                         |               |
-| UtilityCommands::whoami()               | Return the current user                                                 |  __(string)__ |
-| UtilityCommands::which()                | Returns the executable path of given program if installed               |  __(string)__ |
-| UtilityCommands::tar()                  | De-/compress directories using the tar algorithm                        |  __(bool)__   |
-| UtilityCommands::gzip()                 | De-/compress files using the gzip algorithm                             |  __(bool)__   |
-| UtilityCommands::gunzip()               | Decompress files using the gzip algorithm                               |  __(bool)__   |
-| UtilityCommands::zip()                  | Compress files & Direcotories using the zip algorithm                   |  __(bool)__   |
-| UtilityCommands::unzip()                | Decompress files & Direcotories using the zip algorithm                 |  __(bool)__   |
-| **Database Commands**                   |                                                                         |               |
-| DatabaseCommands::mysqldump()           | Export MySQL Database                                                   |  __(bool)__   |
-| DatabaseCommands::pg_dump()             | Export PostgreSQÖ Database                                              |  __(null)__   |
+|**Utility Commands**|||
+|UtilityCommands::tar()|De-/compress directories using the tar algorithm|__(bool)__|
+|UtilityCommands::gzip()|De-/compress files using the gzip algorithm|__(bool)__|
+|UtilityCommands::gunzip()| Decompress files using the gzip algorithm|__(bool)__|
+|UtilityCommands::zip()|Compress files & Direcotories using the zip algorithm|__(bool)__|
+|UtilityCommands::unzip()|Decompress files & Direcotories using the zip algorithm|__(bool)__|
+|UtilityCommands::stats()|Display detailed file information|__(array)__|
+|**System Commands**|||
+|SystemCommands::which()|Returns the executable path of given program| __(bool \| string)__|
+|SystemCommands::whence()|Returns the executable path of given program| __(bool \| string)__|
+|SystemCommands::whoami()|Returns the current user| __(string)__ |
+|SystemCommands::uptime()|Show system uptime|__(string)__|
+|SystemCommands::hostname()|Show System hostname|__(string)__|
+|**Database Commands**||               |
+|DatabaseCommands::mysqldump()|Export MySQL Database|__(bool)__|
+|DatabaseCommands::pg_dump()|Export PostgreSQL Database|__(null)__|
