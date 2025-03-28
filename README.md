@@ -24,10 +24,15 @@ Shell::whoami();
 $shell = new Shell();
 $shell->which('php');
 
-// Or if you're only interested in specific Commands you can simply call them like this:
+// Or if you're only interested in specific Commands you can simply call them statically
+use fatalus\PhpShell\SystemCommands;
+
+SystemCommands::whoami();
+
+
 use fatalus\PhpShell\UtilityCommands;
 
-UtilityCommands::whoami();
+UtilityCommands::stat(__DIR__.DIRECTORY_SEPERATOR.'README.md')
 ```
 
 ---
