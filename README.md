@@ -48,7 +48,7 @@ UtilityCommands::stat(__DIR__.DIRECTORY_SEPERATOR.'README.md')
 |UtilityCommands::gunzip()| Decompress files using the gzip algorithm|__(bool)__|
 |UtilityCommands::zip()|Compress files & Direcotories using the zip algorithm|__(bool)__|
 |UtilityCommands::unzip()|Decompress files & Direcotories using the zip algorithm|__(bool)__|
-|UtilityCommands::stats()|Display detailed file information|__(array)__|
+|UtilityCommands::stat()|Display detailed file information|__(array)__|
 |**System Commands**|||
 |SystemCommands::which()|Returns the executable path of given program| __(bool \| string)__|
 |SystemCommands::whence()|Returns the executable path of given program| __(bool \| string)__|
