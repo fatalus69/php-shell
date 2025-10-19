@@ -1,18 +1,19 @@
 <?php
+
 namespace fatalus\PhpShell\Commands;
 
-use Exception;
+use fatalus\PhpShell\Core\ShellExecutor;
 
 class SystemCommands {
     public static function whoami(): string
     {
-        return trim(exec('whoami'));
+        return (new ShellExecutor()->run('whoami'));
     }
 
     public static function which(string $command): string|bool
     {
-        $output = trim(exec("which ".escapeshellarg($command)));
-        if (str_contains($output, 'not found') || empty($output)) {
+        $output = (new ShellExecutor()->run("which " . escapeshellarg($command)));
+        if (empty($output)) {
             return false;
         }
         return $output;
@@ -20,17 +21,32 @@ class SystemCommands {
 
     public function whence(string $command): string|bool
     {
-        $output = trim(exec("whence ".escapeshellarg($command)));
-        return (empty($output)) ? false : $output;
+        $output = (new ShellExecutor()->run("whence " . escapeshellarg($command)));
+        if (empty($output)) {
+            return false;
+        }
+        return $output;
     }
 
-    public static function uptime(): string
+    public static function uptime(): ?int
     {
-        return trim(exec('uptime'));
-    }
-    
-    public static function hostname (): string 
-    {
-        return trim(exec('hostname'));
+        $output = (new ShellExecutor()->run('uptime --pretty')); 
+        $exploded_output = explode(" ", $output);
+        $time = (int)trim($exploded_output[1]);
+        $identifier = trim($exploded_output[2]);
+
+        switch (strtolower($identifier)) {
+            case 'seconds':
+                return $time;
+                break;
+            case 'minutes':
+                return $time * 60;
+                break;
+            case 'hours':
+                $time * 60 * 60;
+            
+            default:
+                return null;
+        }
     }
 }
