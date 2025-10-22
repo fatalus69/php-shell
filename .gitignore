@@ -1,7 +1,4 @@
-vendor/
+vendor
 .idea
 .vscode
-test_zip/
-*.gz
-*.tar
-*.zip
+*.cache
