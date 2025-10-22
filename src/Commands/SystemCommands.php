@@ -30,23 +30,20 @@ class SystemCommands {
 
     public static function uptime(): ?int
     {
-        $output = (new ShellExecutor()->run('uptime --pretty')); 
-        $exploded_output = explode(" ", $output);
-        $time = (int)trim($exploded_output[1]);
-        $identifier = trim($exploded_output[2]);
-
-        switch (strtolower($identifier)) {
-            case 'seconds':
-                return $time;
-                break;
-            case 'minutes':
-                return $time * 60;
-                break;
-            case 'hours':
-                $time * 60 * 60;
-            
-            default:
-                return null;
+        $output = (new ShellExecutor()->run('uptime -s')); 
+        if (empty($output)) {
+            return null;
         }
+
+        $time = strtotime($output);
+        if ($time === false) {
+            return null;
+        }
+        return time() - $time;
     }
+
+    public static function hostname(): string
+    {
+        return (new ShellExecutor()->run('hostname'));
+    } 
 }
