@@ -2,6 +2,4 @@
 
 namespace fatalus\PhpShell\Contracts;
 
-interface CommandInterface {
-
-}
+interface CommandInterface {}
