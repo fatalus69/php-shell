@@ -4,33 +4,36 @@ namespace fatalus\PhpShell\Commands;
 
 use fatalus\PhpShell\Core\ShellExecutor;
 
-class SystemCommands {
+class SystemCommands
+{
     public static function whoami(): string
     {
-        return (new ShellExecutor()->run('whoami'));
+        return new ShellExecutor()->run('whoami');
     }
 
-    public static function which(string $command): string|bool
+    public static function which(string $command): bool|string
     {
         $output = (new ShellExecutor()->run("which " . escapeshellarg($command)));
         if (empty($output)) {
             return false;
         }
+
         return $output;
     }
 
-    public function whence(string $command): string|bool
+    public function whence(string $command): bool|string
     {
         $output = (new ShellExecutor()->run("whence " . escapeshellarg($command)));
         if (empty($output)) {
             return false;
         }
+
         return $output;
     }
 
     public static function uptime(): ?int
     {
-        $output = (new ShellExecutor()->run('uptime -s')); 
+        $output = (new ShellExecutor()->run('uptime -s'));
         if (empty($output)) {
             return null;
         }
@@ -39,11 +42,7 @@ class SystemCommands {
         if ($time === false) {
             return null;
         }
+
         return time() - $time;
     }
-
-    public static function hostname(): string
-    {
-        return (new ShellExecutor()->run('hostname'));
-    } 
 }
