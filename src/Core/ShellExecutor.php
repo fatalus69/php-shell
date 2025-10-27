@@ -14,10 +14,11 @@ class ShellExecutor
         // TODO: Windows support
         exec($command . ' 2>&1', $output, $status);
 
-        if ($status !== 0) {
-            throw new RuntimeException("Command failed: {$command}\nOutput: " . implode("\n", $output));
-        }
+        // if ($status !== 0) {
+        //     throw new RuntimeException("Command failed: {$command}\nOutput: " . implode("\n", $output));
+        // }
 
+        //maybe return formatted array with keys like status, output, error, etc.
         return trim(implode("\n", $output));
     }
 }

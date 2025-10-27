@@ -13,7 +13,7 @@ class SystemCommands
 
     public static function which(string $command): bool|string
     {
-        $output = (new ShellExecutor()->run("which " . escapeshellarg($command)));
+        $output = new ShellExecutor()->run("which " . escapeshellarg($command));
         if (empty($output)) {
             return false;
         }
@@ -21,9 +21,19 @@ class SystemCommands
         return $output;
     }
 
-    public function whence(string $command): bool|string
+    /**
+     * This only works on ZSH configurations.
+     */
+    public static function whence(string $command): bool|string
     {
-        $output = (new ShellExecutor()->run("whence " . escapeshellarg($command)));
+        /**
+         * Call 'which' if the current shell is not zsh
+         */
+        if (strpos($_SERVER['SHELL'], 'zsh') === false) {
+            return self::which($command);
+        }
+
+        $output = new ShellExecutor()->run("whence " . escapeshellarg($command));
         if (empty($output)) {
             return false;
         }
@@ -33,7 +43,7 @@ class SystemCommands
 
     public static function uptime(): ?int
     {
-        $output = (new ShellExecutor()->run('uptime -s'));
+        $output = new ShellExecutor()->run('uptime -s');
         if (empty($output)) {
             return null;
         }
