@@ -4,6 +4,8 @@ namespace fatalus\PhpShell\Commands;
 
 use fatalus\PhpShell\Core\ShellExecutor;
 
+use function fatalus\PhpShell\determineCurrentShell;
+
 /**
  * Maybe return whole return array with status and output?
  */
@@ -29,8 +31,8 @@ class SystemCommands
      */
     public static function whence(string $command): bool|string
     {
-        // Call 'which' if the current shell is not zsh
-        if (strpos($_SERVER['SHELL'], 'zsh') === false) {
+        // Call which if the current shell is not zsh
+        if (determineCurrentShell() !== 'zsh') {
             return self::which($command);
         }
 

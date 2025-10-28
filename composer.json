@@ -1,13 +1,15 @@
 {
     "name": "fatalus/php-shell",
-    "description": "Run the shell Commands directly from PHP",
+    "description": "Run shell Commands directly from PHP",
     "homepage": "https://github.com/fatalus69/php-shell",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "fatalus\\PhpShell\\": "src"
-        }   
+        }, "files":[ 
+            "src/functions.php"
+        ]
     },
     "authors": [
         {
@@ -19,8 +21,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.89",
-        "pestphp/pest": "^4.1",
-        "symfony/var-dumper": "^7.3"
+        "pestphp/pest": "^4.1"
     },
     "config": {
         "allow-plugins": {
