@@ -17,7 +17,6 @@ class TarCommand
     public static function run(string $filepath, int $options = 0, ?string $target = null): array
     {
         $option_string = self::parseOptions($options);
-        print_r($option_string);
         $command = "tar -{$option_string}f " . escapeshellarg($filepath);
 
         // if its being extracted, set target directory
